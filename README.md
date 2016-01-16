@@ -7,8 +7,11 @@ Messages can be formatted as HTML within in the `html` parameter of each form.
 
 ###Functions
 `welcome`: Send "Welcome" email
+
 `passReset`: Send password reset link and instructions
+
 `passChanged`: Send notification that password was changed
+
 `tfaReset`: Send link and instructions to reset TFA settings
 
 ###Example
@@ -23,5 +26,7 @@ mailer.tfaReset('Pranav', 'pranz.laks@gmail.com');
 
 ###TO-DO:
 *Verify domain and from address
+
 *Format messages for each e-mail
+
 *Add to function arguments
