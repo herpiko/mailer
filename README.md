@@ -25,8 +25,6 @@ mailer.tfaReset('Pranav', 'pranz.laks@gmail.com');
 ```
 
 ###TO-DO:
-*Verify domain and from address
-
-*Format messages for each e-mail
-
-*Add to function arguments
+* Verify domain and from address
+* Format messages for each e-mail
+* Add to function arguments
