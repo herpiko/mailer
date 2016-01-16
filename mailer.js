@@ -9,6 +9,7 @@ var api_key = 'key-80ebd8a4062b3ca35560541b9b714a38';
 var domain = 'sandbox23741fa183b1467da1bd5d449dc1645e.mailgun.org';
 var address = 'postmaster@' + domain;
 
+//Sample link used for debug
 var link = 'fusiform.co';
 
 /**
