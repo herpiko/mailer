@@ -10,12 +10,24 @@ module.exports = function(key, dom, ad) {
   var link = 'fusiform.co';
 
   return {
+    /**
+      Set the api key
+      @param key - new API key
+    **/
     setApiKey: function(key) {
         api_key = key;
     },
+    /**
+      Set the domain
+      @param dom - new domain
+    **/
     setDomain: function(dom) {
       domain = dom;
     },
+    /**
+      Set the from address
+      @param ad - new from address
+    **/
     setAddress: function(ad) {
       address = ad;
     },
