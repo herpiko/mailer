@@ -1,0 +1,23 @@
+{
+  "name": "mailgun-mailer",
+  "version": "1.3.0",
+  "description": "NodeJS module for use with Mailgun API",
+  "main": "mailer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fusiform/mailer.git"
+  },
+  "keywords": [
+    "mailer",
+    "mailgun"
+  ],
+  "author": "Pranav Lakshmi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fusiform/mailer/issues"
+  },
+  "homepage": "https://github.com/fusiform/mailer#readme"
+}

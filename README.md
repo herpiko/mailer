@@ -5,6 +5,9 @@ Node scripts for using Mailgun.
 
 Messages can be formatted as HTML within in the `html` parameter of each form.
 
+###Installation
+`npm install mailgun-mailer`
+
 ###Functions
 `setApiKey`: Set the API key
 
@@ -14,6 +17,8 @@ Messages can be formatted as HTML within in the `html` parameter of each form.
 
 `welcome`: Send "Welcome" email
 
+`verifyEmail`: Send verification email for new account
+
 `passReset`: Send password reset link and instructions
 
 `passChanged`: Send notification that password was changed
@@ -22,19 +27,16 @@ Messages can be formatted as HTML within in the `html` parameter of each form.
 
 ###Example
 ```
-var api_key = 'key-1234';
-var domain = 'sampledomain.mailgun.org';
-var address = 'postmaster@' + domain;
+var cred = {
+  'key': 'key-00001234',
+  'domain': 'sandbox1234.mailgun.org',
+  'address': 'postmaster@sandbox1234.mailgun.org'
+};
 
-var mailer = require('./mailer.js')(api_key, domain, address);
+var mailer = require('mailgun-mailer')(cred);
 
 mailer.welcome('Pranav', 'pranz.laks@gmail.com');
-mailer.passReset('Pranav', 'pranz.laks@gmail.com');
-mailer.passChanged('Pranav', 'pranz.laks@gmail.com');
-mailer.tfaReset('Pranav', 'pranz.laks@gmail.com');
 ```
 
 ###TO-DO:
-* Verify domain and from address
 * Format messages for each e-mail
-* Add to function arguments

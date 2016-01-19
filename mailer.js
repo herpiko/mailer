@@ -1,10 +1,10 @@
-module.exports = function(key, dom, ad) {
+module.exports = function(cred) {
 
   var request = require('request');
 
-  var api_key = key;
-  var domain = dom;
-  var address = ad;
+  var api_key = cred.key;
+  var domain = cred.domain;
+  var address = cred.address;
 
   //Sample link used for debug
   var link = 'fusiform.co';
@@ -37,7 +37,7 @@ module.exports = function(key, dom, ad) {
       @param name - name of the user.
       @param toAddress - recipient's email address
     **/
-    welcome: function(name, toAddress, callback) {
+    welcome: function(name, toAddress) {
       request({
           url: 'https://api.mailgun.net/v3/' + domain + '/messages',
           method: 'POST',
@@ -55,8 +55,16 @@ module.exports = function(key, dom, ad) {
       }, function(error, response, body) {
           if(error) {
               console.log(error);
+          } else if (response.statusCode != 200) {
+              console.log({
+                'Status': 'Message send failure',
+                'Type': 'Welcome'
+              });
           } else {
-              console.log(body);
+              console.log({
+                'Status': 'Message sent',
+                'Type': 'Welcome'
+              });
           }
       });
     },
@@ -85,12 +93,19 @@ module.exports = function(key, dom, ad) {
       }, function(error, response, body) {
           if(error) {
               console.log(error);
+          } else if (response.statusCode != 200) {
+              console.log({
+                'Status': 'Message send failure',
+                'Type': 'Email verification'
+              });
           } else {
-              console.log(body);
+              console.log({
+                'Status': 'Message sent',
+                'Type': 'Email verification'
+              });
           }
       });
     },
-
 
     /**
       Send an email to reset the password
@@ -114,8 +129,16 @@ module.exports = function(key, dom, ad) {
       }, function(error, response, body) {
           if(error) {
               console.log(error);
+          } else if (response.statusCode != 200) {
+              console.log({
+                'Status': 'Message send failure',
+                'Type': 'Password reset'
+              });
           } else {
-              console.log(body);
+              console.log({
+                'Status': 'Message sent',
+                'Type': 'Password reset'
+              });
           }
       });
     },
@@ -142,8 +165,16 @@ module.exports = function(key, dom, ad) {
       }, function(error, response, body) {
           if(error) {
               console.log(error);
+          } else if (response.statusCode != 200) {
+              console.log({
+                'Status': 'Message send failure',
+                'Type': 'Password reset notification'
+              });
           } else {
-              console.log(body);
+              console.log({
+                'Status': 'Message sent',
+                'Type': 'Password reset notification'
+              });
           }
       });
     },
@@ -170,8 +201,16 @@ module.exports = function(key, dom, ad) {
       }, function(error, response, body) {
           if(error) {
               console.log(error);
+          } else if (response.statusCode != 200) {
+              console.log({
+                'Status': 'Message send failure',
+                'Type': 'TFA reset'
+              });
           } else {
-              console.log(body);
+              console.log({
+                'Status': 'Message sent',
+                'Type': 'TFA reset'
+              });
           }
       });
     }
