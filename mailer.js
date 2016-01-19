@@ -37,7 +37,7 @@ module.exports = function(key, dom, ad) {
       @param name - name of the user.
       @param toAddress - recipient's email address
     **/
-    welcome: function(name, toAddress) {
+    welcome: function(name, toAddress, callback) {
       request({
           url: 'https://api.mailgun.net/v3/' + domain + '/messages',
           method: 'POST',
@@ -60,6 +60,37 @@ module.exports = function(key, dom, ad) {
           }
       });
     },
+
+    /**
+      Verify your email
+      @param name - name of the user.
+      @param toAddress - recipient's email address
+      @param verify_link - link to verify email
+    **/
+    verifyEmail: function(name, toAddress, verify_link) {
+      request({
+          url: 'https://api.mailgun.net/v3/' + domain + '/messages',
+          method: 'POST',
+          'auth': {
+            'user': 'api',
+            'password': api_key
+          },
+          form: {
+            'from': address,
+            'to': toAddress,
+            'subject': 'Welcome to FusiformCAST!',
+            'html': 'Hello, <b>' + name + '</b>.\
+              <p>Verify your email. <b><a href="' + verify_link + '">Click here!</a>!</b>',
+          }
+      }, function(error, response, body) {
+          if(error) {
+              console.log(error);
+          } else {
+              console.log(body);
+          }
+      });
+    },
+
 
     /**
       Send an email to reset the password
