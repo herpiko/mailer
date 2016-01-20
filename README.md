@@ -5,10 +5,10 @@ Node scripts for using Mailgun.
 
 Messages can be formatted as HTML within in the `html` parameter of each form.
 
-###Installation
+### Installation
 `npm install mailgun-mailer`
 
-###Functions
+### Functions
 `setApiKey`: Set the API key
 
 `setDomain`: Set the domain (ie. fusiform.co)
@@ -46,7 +46,7 @@ Parameters:
 
 `tfaReset`: Send link and instructions to reset TFA settings
 
-###Example
+### Example
 ```
 var cred = {
   'key': 'key-00001234',
