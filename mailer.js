@@ -1,14 +1,37 @@
-module.exports = function(cred) {
-
+module.exports = function(cred, debug) {
+​
   var request = require('request');
-
+  var fs = require('fs');
+​
   var api_key = cred.key;
   var domain = cred.domain;
   var address = cred.address;
-
+​
   //Sample link used for debug
   var link = 'fusiform.co';
+​
+  var customizeDoc = function(file, toReplace, callback) {
+    // var file = "path to file";
+    // var toReplace = [
+    //     {"find":"John", "replace":"Doe"},
+    //     {"find":"Anna", "replace":"Smith"},
+    //     {"find":"Peter","replce": "Jones"}
+    // ];
+​
+    fs.readFile(file, 'utf8', function (err,data) {
+      if (err) {
+        return console.log(err);
+      }
+      //console.log(data);
+      for (var i = 0, len = toReplace.length; i < len; i++) {
+        data = data.replace(toReplace[i].find, toReplace[i].replace);
 
+      }
+      callback(data);
+    });
+  };
+​
+​
   return {
     /**
       Set the api key
@@ -31,6 +54,101 @@ module.exports = function(cred) {
     setAddress: function(ad) {
       address = ad;
     },
+​
+    /**
+      Send email
+      @param name - name of the user.
+      @param toAddress - recipient's email address
+      @param subject - subject of email
+      @param templateFile - html template for email
+    **/
+    sendMail: function(name, toAddress, subject, templateFile) {
+      var toReplace = [
+          {"find":"**|VLINK|**", "replace":}
+      ];
+      // customizeDoc('./app/emailTemplates/verifyEmail.html', toReplace, function (body) {
+      customizeDoc(templateFile, toReplace, function (body) {
+         request({
+            url: 'https://api.mailgun.net/v3/' + domain + '/messages',
+            method: 'POST',
+            'auth': {
+              'user': 'api',
+              'password': api_key
+            },
+            form: {
+              'from': address,
+              'to': toAddress,
+              'subject': subject,
+              'html': body,
+            }
+        }, function(error, response, body) {
+            if (debug) {
+              if (error) {
+                  console.log(error);
+              } else if (response.statusCode != 200) {
+                  console.log({
+                    'Status': 'Message send failure',
+                    'Subject': subject
+                  });
+              } else {
+                  console.log({
+                    'Status': 'Message sent',
+                    'Subject': subject
+                  });
+              }
+            }
+        });
+      });
+    },
+​
+    /**
+      Send email with verification link
+      @param name - name of the user.
+      @param toAddress - recipient's email address
+      @param subject - subject of email
+      @param templateFile - html template for email
+      @param link - link to verify email
+    **/
+    sendLink: function(name, toAddress, subject, templateFile, link) {
+      var toReplace = [
+          {"find":"**|VLINK|**", "replace": link}
+      ];
+      // customizeDoc('./app/emailTemplates/verifyEmail.html', toReplace, function (body) {
+      customizeDoc(templateFile, toReplace, function (body) {
+         request({
+            url: 'https://api.mailgun.net/v3/' + domain + '/messages',
+            method: 'POST',
+            'auth': {
+              'user': 'api',
+              'password': api_key
+            },
+            form: {
+              'from': address,
+              'to': toAddress,
+              'subject': subject,
+              'html': body,
+            }
+        }, function(error, response, body) {
+            if (debug) {
+              if (error) {
+                  console.log(error);
+              } else if (response.statusCode != 200) {
+                  console.log({
+                    'Status': 'Message send failure',
+                    'Subject': subject
+                  });
+              } else {
+                  console.log({
+                    'Status': 'Message sent',
+                    'Subject': subject
+                  });
+              }
+            }
+        });
+      });
+    },
+
+// OLD - functions for every email =============================================
 
     /**
       Send a welcome email
@@ -55,11 +173,6 @@ module.exports = function(cred) {
       }, function(error, response, body) {
           if(error) {
               console.log(error);
-          } else if (response.statusCode != 200) {
-              console.log({
-                'Status': 'Message send failure',
-                'Type': 'Welcome'
-              });
           } else {
               console.log({
                 'Status': 'Message sent',
@@ -68,45 +181,55 @@ module.exports = function(cred) {
           }
       });
     },
+
 
     /**
       Verify your email
       @param name - name of the user.
       @param toAddress - recipient's email address
+      @param templateFile -
       @param verify_link - link to verify email
     **/
-    verifyEmail: function(name, toAddress, verify_link) {
-      request({
-          url: 'https://api.mailgun.net/v3/' + domain + '/messages',
-          method: 'POST',
-          'auth': {
-            'user': 'api',
-            'password': api_key
-          },
-          form: {
-            'from': address,
-            'to': toAddress,
-            'subject': 'Welcome to FusiformCAST!',
-            'html': 'Hello, <b>' + name + '</b>.\
-              <p>Verify your email. <b><a href="' + verify_link + '">Click here!</a>!</b>',
-          }
-      }, function(error, response, body) {
-          if(error) {
-              console.log(error);
-          } else if (response.statusCode != 200) {
-              console.log({
-                'Status': 'Message send failure',
-                'Type': 'Email verification'
-              });
-          } else {
-              console.log({
-                'Status': 'Message sent',
-                'Type': 'Email verification'
-              });
-          }
+    verifyEmail: function(name, toAddress, templateFile, verify_link) {
+      var toReplace = [
+          {"find":"**|VLINK|**", "replace":verify_link}
+      ];
+      // customizeDoc('./app/emailTemplates/verifyEmail.html', toReplace, function (body) {
+      customizeDoc(templateFile, toReplace, function (body) {
+         request({
+            url: 'https://api.mailgun.net/v3/' + domain + '/messages',
+            method: 'POST',
+            'auth': {
+              'user': 'api',
+              'password': api_key
+            },
+            form: {
+              'from': address,
+              'to': toAddress,
+              'subject': 'Welcome to FusiformCAST!',
+              'html': body,
+            }
+        }, function(error, response, body) {
+            if (debug) {
+              if (error) {
+                  console.log(error);
+              } else if (response.statusCode != 200) {
+                  console.log({
+                    'Status': 'Message send failure',
+                    'Type': 'Email verification'
+                  });
+              } else {
+                  console.log({
+                    'Status': 'Message sent',
+                    'Type': 'Email verification'
+                  });
+              }
+            }
+        });
       });
     },
-
+​
+​
     /**
       Send an email to reset the password
       @param name - name of the user.
@@ -127,21 +250,25 @@ module.exports = function(cred) {
             'html': 'Hello, ' + name + '. Click here to reset your password.'
           }
       }, function(error, response, body) {
-          if(error) {
-              console.log(error);
-          } else if (response.statusCode != 200) {
-              console.log({
-                'Status': 'Message send failure',
-                'Type': 'Password reset'
-              });
-          } else {
-              console.log({
-                'Status': 'Message sent',
-                'Type': 'Password reset'
-              });
+          if (debug) {
+            if(error) {
+                console.log(error);
+            } else if (response.statusCode != 200) {
+                console.log({
+                  'Status': 'Message send failure',
+                  'Type': 'Password reset'
+                });
+            } else {
+                console.log({
+                  'Status': 'Message sent',
+                  'Type': 'Password reset'
+                });
+            }
+
           }
       });
     },
+​
 
     /**
       Send a notification that the password was changed
@@ -163,21 +290,24 @@ module.exports = function(cred) {
             'html': 'Hello, ' + name + '. Your FusiformCAST password was recently changed.'
           }
       }, function(error, response, body) {
-          if(error) {
-              console.log(error);
-          } else if (response.statusCode != 200) {
-              console.log({
-                'Status': 'Message send failure',
-                'Type': 'Password reset notification'
-              });
-          } else {
-              console.log({
-                'Status': 'Message sent',
-                'Type': 'Password reset notification'
-              });
+          if (debug) {
+            if(error) {
+                console.log(error);
+            } else if (response.statusCode != 200) {
+                console.log({
+                  'Status': 'Message send failure',
+                  'Type': 'Password reset notification'
+                });
+            } else {
+                console.log({
+                  'Status': 'Message sent',
+                  'Type': 'Password reset notification'
+                });
+            }
           }
       });
     },
+​
 
     /**
       Send a notification that the password was changed
@@ -199,21 +329,23 @@ module.exports = function(cred) {
             'html': 'Hello, ' + name + '. Click here to reset your two-factor authentication.'
           }
       }, function(error, response, body) {
-          if(error) {
-              console.log(error);
-          } else if (response.statusCode != 200) {
-              console.log({
-                'Status': 'Message send failure',
-                'Type': 'TFA reset'
-              });
-          } else {
-              console.log({
-                'Status': 'Message sent',
-                'Type': 'TFA reset'
-              });
+          if (debug) {
+            if(error) {
+                console.log(error);
+            } else if (response.statusCode != 200) {
+                console.log({
+                  'Status': 'Message send failure',
+                  'Type': 'TFA reset'
+                });
+            } else {
+                console.log({
+                  'Status': 'Message sent',
+                  'Type': 'TFA reset'
+                });
+            }
           }
       });
     }
-
+​
   }
 }
