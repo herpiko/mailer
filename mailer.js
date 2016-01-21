@@ -140,6 +140,49 @@ module.exports = function(cred, debug) {
         });
       });
     },
+    /**
+      Send email with verification link
+      @param name - name of the user.
+      @param toAddress - recipient's email address
+      @param subject - subject of email
+      @param templateFile - html template for email
+      @param link - link to verify email
+    **/
+    sendReplace: function(name, toAddress, subject, templateFile, toReplace) {
+      // customizeDoc('./app/emailTemplates/verifyEmail.html', toReplace, function (body) {
+      customizeDoc(templateFile, toReplace, function (body) {
+         request({
+            url: 'https://api.mailgun.net/v3/' + domain + '/messages',
+            method: 'POST',
+            'auth': {
+              'user': 'api',
+              'password': api_key
+            },
+            form: {
+              'from': address,
+              'to': toAddress,
+              'subject': subject,
+              'html': body,
+            }
+        }, function(error, response, body) {
+            if (debug) {
+              if (error) {
+                  console.log(error);
+              } else if (response.statusCode != 200) {
+                  console.log({
+                    'Status': 'Message send failure',
+                    'Subject': subject
+                  });
+              } else {
+                  console.log({
+                    'Status': 'Message sent',
+                    'Subject': subject
+                  });
+              }
+            }
+        });
+      });
+    },
 // OLD - functions for every email =============================================
 
     /**
