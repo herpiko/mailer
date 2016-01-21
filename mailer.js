@@ -1,15 +1,12 @@
-module.exports = function(cred, debug) {
-​
+
   var request = require('request');
   var fs = require('fs');
-​
+module.exports = function(cred, debug) {
   var api_key = cred.key;
   var domain = cred.domain;
   var address = cred.address;
-​
   //Sample link used for debug
   var link = 'fusiform.co';
-​
   var customizeDoc = function(file, toReplace, callback) {
     // var file = "path to file";
     // var toReplace = [
@@ -17,7 +14,6 @@ module.exports = function(cred, debug) {
     //     {"find":"Anna", "replace":"Smith"},
     //     {"find":"Peter","replce": "Jones"}
     // ];
-​
     fs.readFile(file, 'utf8', function (err,data) {
       if (err) {
         return console.log(err);
@@ -30,8 +26,6 @@ module.exports = function(cred, debug) {
       callback(data);
     });
   };
-​
-​
   return {
     /**
       Set the api key
@@ -54,7 +48,6 @@ module.exports = function(cred, debug) {
     setAddress: function(ad) {
       address = ad;
     },
-​
     /**
       Send email
       @param name - name of the user.
@@ -64,7 +57,7 @@ module.exports = function(cred, debug) {
     **/
     sendMail: function(name, toAddress, subject, templateFile) {
       var toReplace = [
-          {"find":"**|VLINK|**", "replace":}
+          {"find":"**|VLINK|**", "replace":"hello"}
       ];
       // customizeDoc('./app/emailTemplates/verifyEmail.html', toReplace, function (body) {
       customizeDoc(templateFile, toReplace, function (body) {
@@ -100,7 +93,7 @@ module.exports = function(cred, debug) {
         });
       });
     },
-​
+
     /**
       Send email with verification link
       @param name - name of the user.
@@ -147,7 +140,6 @@ module.exports = function(cred, debug) {
         });
       });
     },
-
 // OLD - functions for every email =============================================
 
     /**
@@ -228,8 +220,8 @@ module.exports = function(cred, debug) {
         });
       });
     },
-​
-​
+
+
     /**
       Send an email to reset the password
       @param name - name of the user.
@@ -268,7 +260,7 @@ module.exports = function(cred, debug) {
           }
       });
     },
-​
+
 
     /**
       Send a notification that the password was changed
@@ -307,7 +299,7 @@ module.exports = function(cred, debug) {
           }
       });
     },
-​
+
 
     /**
       Send a notification that the password was changed
@@ -346,6 +338,5 @@ module.exports = function(cred, debug) {
           }
       });
     }
-​
   }
 }
