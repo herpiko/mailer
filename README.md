@@ -32,6 +32,16 @@ Parameters:
 * templateFile - string - path to HTML template of file
 * link - string - link to insert into email template
 
+`sendReplace`: Send an email and specify parameters to replace (for email verification, password reset, etc.)
+
+Parameters:
+* name - string - name of recipient
+* toAddress - string - recipient's email address
+* subject - string - subject of email
+* templateFile - string - path to HTML template of file
+* toReplace - JSON - key-value pairs for strings to replace
+
+
 #### Other functions
 
 `setAddress`: Set the from address (ie. postmaster@fusiform.co)
